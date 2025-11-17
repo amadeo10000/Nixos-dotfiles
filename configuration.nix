@@ -65,6 +65,7 @@
   };
 
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 
   # Allow unfree packages
@@ -75,6 +76,7 @@
   environment.systemPackages = with pkgs; [
    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
    wget
+   git
    kdePackages.sddm
    hyprland
    fish
@@ -97,6 +99,7 @@
    obsidian
    bluetui
    bluez
+   vesktop
 
 ];
 
