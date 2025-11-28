@@ -23,9 +23,30 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  
+  hardware.bluetooth = {
+  enable = true;
+  powerOnBoot = true;
+  settings = {
+    General = {
+      # Shows battery charge of connected devices on supported
+      # Bluetooth adapters. Defaults to 'false'.
+      Experimental = true;
+      # When enabled other devices can connect faster to us, however
+      # the tradeoff is increased power consumption. Defaults to
+      # 'false'.
+      FastConnectable = true;
+    };
+    Policy = {
+      # Enable all controllers when they are found. This includes
+      # adapters present on start as well as adapters that are plugged
+      # in later on. Defaults to 'true'.
+      AutoEnable = true;
+    };
+  };
+};
 
-  # enable bluetooth
-  hardware.bluetooth.enable = true;
+  services.gvfs.enable = true;
 
 
   # Set your time zone.
@@ -46,6 +67,32 @@
     LC_TIME = "es_AR.UTF-8";
   };
 
+  # Enable the X11 windowing system.
+  # You can disable this if you're only using the Wayland session.
+  services.xserver.enable = true;
+
+  # Enable Hyprland Window Manager
+  programs.hyprland.enable = true;
+  
+  # Enable Fish
+  programs.fish.enable = true;
+
+  # Enable Steam
+  programs.steam.enable = true;
+
+  # SDDM
+  services.displayManager.sddm = {
+  enable = true;
+  # Opcional: Habilitar y configurar un tema (ejemplo: tema de astronauta)
+  theme = "sddm-astronaut";
+};
+
+  boot.loader.systemd-boot.configurationLimit = 10;
+
+  # Enable Flakes
+    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "latam";
@@ -55,18 +102,42 @@
   # Configure console keymap
   console.keyMap = "la-latin1";
 
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  # Enable sound with pipewire.
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
+  };
+
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.sharko = {
     isNormalUser = true;
     description = "sharko";
     shell = pkgs.fish;
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
+    packages = with pkgs; [
+      kdePackages.kate
+    #  thunderbird
+    ];
   };
 
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
+  # Install firefox.
+  programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -77,7 +148,6 @@
    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
    wget
    git
-   kdePackages.sddm
    hyprland
    fish
    kitty
@@ -100,35 +170,32 @@
    bluetui
    bluez
    vesktop
+   qutebrowser
+   krita
+   tor-browser
+   kdePackages.sddm
+   wlogout
+   yazi
+   tmux
+   kdePackages.dolphin
+   zoxide
+   fzf
+   matugen
+   curl
+   gccgo15
+   usbutils
+  ];
 
-];
+  # System Fonts
 
+  fonts.packages = [
+  
+  pkgs.nerd-fonts.departure-mono
+  pkgs.noto-fonts-cjk-serif
+  pkgs.noto-fonts-cjk-sans
+  pkgs.nerd-fonts.jetbrains-mono
 
-	programs.hyprland.enable = true;
-	programs.fish.enable = true;
-	
-
-	    fonts.packages = with pkgs; [
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      nerd-fonts.departure-mono
-    ];
-
-	security.rtkit.enable = true;
-
-  # Desactivar pulseaudio (PipeWire lo reemplaza)
-  services.pulseaudio.enable = false;
-
-  # Habilitar servicios PipeWire
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;  # sonido para apps de 32 bits
-    pulse.enable = true;       # provee compatibilidad con PulseAudio
-    jack.enable = true;        # opcional, para apps que usan JACK
-    wireplumber.enable = true;
-  };
-
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
