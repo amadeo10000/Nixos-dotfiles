@@ -21,9 +21,14 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Enable networking
+   # Enable networking
   networking.networkmanager.enable = true;
-  
+  programs.nm-applet.enable = true;
+  networking.networkmanager.wifi.powersave = false;
+  powerManagement.enable = true;
+
+
+
   hardware.bluetooth = {
   enable = true;
   powerOnBoot = true;
@@ -46,9 +51,6 @@
   };
 };
 
-  services.gvfs.enable = true;
-
-
   # Set your time zone.
   time.timeZone = "America/Argentina/Buenos_Aires";
 
@@ -67,13 +69,14 @@
     LC_TIME = "es_AR.UTF-8";
   };
 
+
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
 
   # Enable Hyprland Window Manager
   programs.hyprland.enable = true;
-  
+
   # Enable Fish
   programs.fish.enable = true;
 
@@ -175,7 +178,9 @@
    tor-browser
    kdePackages.sddm
    wlogout
-   yazi
+   (yazi.override {
+		_7zz = _7zz-rar;  # Support for RAR extraction
+	})
    tmux
    kdePackages.dolphin
    zoxide
@@ -184,16 +189,18 @@
    curl
    gccgo15
    usbutils
+   hellwal
   ];
 
   # System Fonts
 
-  fonts.packages = [
-  
-  pkgs.nerd-fonts.departure-mono
-  pkgs.noto-fonts-cjk-serif
-  pkgs.noto-fonts-cjk-sans
-  pkgs.nerd-fonts.jetbrains-mono
+  fonts.packages = with pkgs; [
+
+  nerd-fonts.departure-mono
+  noto-fonts-cjk-serif
+  noto-fonts-cjk-sans
+  nerd-fonts.jetbrains-mono
+  noto-fonts-color-emoji
 
   ];
 
@@ -222,6 +229,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 
 }
